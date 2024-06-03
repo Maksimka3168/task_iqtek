@@ -1,6 +1,7 @@
 import os
 from functools import partial
 
+import uvicorn
 from fastapi import FastAPI, Depends
 
 from adapters.sqlalchemy_db.session import get_async_session, create_session_maker
@@ -29,3 +30,11 @@ async def startup():
         raise ValueError("Invalid repository type")
 
     app.dependency_overrides[BaseUserRepository] = get_repository
+
+
+def main():
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, log_level="info")
+
+
+if __name__ == "__main__":
+    main()
