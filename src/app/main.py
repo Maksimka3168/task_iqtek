@@ -1,14 +1,10 @@
-import os
-from functools import partial
-
 import uvicorn
+
 from fastapi import FastAPI, Depends
 
-from adapters.sqlalchemy_db.session import get_async_session, create_session_maker
 from api.root import root_router
-from repository.base import BaseUserRepository
-from repository.database import PostgresUserRepository
-from repository.memory import MemoryUserRepository
+from factorys.repository_factory import RepositoryFactoryStorage, RepositoryMemoryFactory, RepositoryPostgresFactory
+from ioc import ioc
 
 from dotenv import load_dotenv
 
@@ -20,16 +16,11 @@ app.include_router(root_router)
 
 @app.on_event("startup")
 async def startup():
-    if os.getenv("REPOSITORY_TYPE") == "Memory":
-        repository = MemoryUserRepository()
-        get_repository = lambda: repository
-    elif os.getenv("REPOSITORY_TYPE") == "Postgres":
-        session_maker = await create_session_maker()
-        get_repository = lambda x=Depends(partial(get_async_session, session_maker)): PostgresUserRepository(session=x)
-    else:
-        raise ValueError("Invalid repository type")
-
-    app.dependency_overrides[BaseUserRepository] = get_repository
+    repository_factory_storage = RepositoryFactoryStorage()
+    await repository_factory_storage.register_factory(RepositoryMemoryFactory)
+    await repository_factory_storage.register_factory(RepositoryPostgresFactory)
+    repository = await repository_factory_storage.get_instance("postgres", settings=...)
+    ioc.repository = repository
 
 
 def main():
