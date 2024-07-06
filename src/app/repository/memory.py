@@ -1,7 +1,7 @@
 from abc import ABC
 from typing import Optional
 
-from application.models.user import User
+from models.user import User
 from repository.base import BaseUserRepository
 
 

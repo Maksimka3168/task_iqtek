@@ -1,9 +1,11 @@
 import uvicorn
 
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI
 
-from api.root import root_router
-from factorys.repository_factory import RepositoryFactoryStorage, RepositoryMemoryFactory, RepositoryPostgresFactory
+from api.users.users import users_router
+from factories.config_factory import ConfigFactoryStorage, YmlConfigFactory
+
+from factories.repository_factory import RepositoryFactoryStorage, RepositoryMemoryFactory, RepositoryPostgresFactory
 from ioc import ioc
 
 from dotenv import load_dotenv
@@ -11,16 +13,24 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = FastAPI()
-app.include_router(root_router)
 
 
 @app.on_event("startup")
 async def startup():
+    config_factory_storage = ConfigFactoryStorage()
+    await config_factory_storage.register_factory(YmlConfigFactory())
+    config = await config_factory_storage.get_instance("yml")
+
     repository_factory_storage = RepositoryFactoryStorage()
-    await repository_factory_storage.register_factory(RepositoryMemoryFactory)
-    await repository_factory_storage.register_factory(RepositoryPostgresFactory)
-    repository = await repository_factory_storage.get_instance("postgres", settings=...)
+    await repository_factory_storage.register_factory(RepositoryMemoryFactory())
+    await repository_factory_storage.register_factory(RepositoryPostgresFactory())
+    repository = await repository_factory_storage.get_instance(config["repositories"]["selected_repository"],
+                                                               settings=config["repositories"][config["repositories"]
+                                                               ["selected_repository"]])
     ioc.repository = repository
+
+
+app.include_router(users_router)
 
 
 def main():

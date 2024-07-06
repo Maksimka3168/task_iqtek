@@ -3,7 +3,7 @@ from typing import Optional
 
 from sqlalchemy import select, insert, update, delete
 
-from application.models.user import User, UserResponse
+from models.user import User, UserResponse
 from repository.base import BaseUserRepository
 
 from adapters.sqlalchemy_db.models import Users

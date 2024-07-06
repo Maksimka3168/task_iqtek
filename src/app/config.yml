@@ -1,0 +1,9 @@
+repositories:
+  selected_repository: 'memory'
+  postgres:
+    driver: 'postgresql+asyncpg'
+    username: 'user'
+    password: 'password'
+    hostname: 'host'
+    database_name: 'db_name'
+  memory:

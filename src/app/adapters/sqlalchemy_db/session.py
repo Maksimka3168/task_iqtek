@@ -6,8 +6,9 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
 
-async def create_session_maker():
-    DATABASE_URL = os.getenv("DB_URI")
+async def create_session_maker(settings: dict):
+
+    DATABASE_URL = f"{settings['driver']}://{settings['username']}:{settings['password']}@{settings['hostname']}/{settings['database_name']}"
 
     engine = create_async_engine(DATABASE_URL)
     return sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)

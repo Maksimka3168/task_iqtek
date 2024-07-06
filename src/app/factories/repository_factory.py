@@ -33,7 +33,7 @@ class RepositoryPostgresFactory(RepositoryFactory):
         return "postgres"
 
     async def get_instance(self, settings: dict) -> BaseUserRepository:
-        session_maker = await create_session_maker()
+        session_maker = await create_session_maker(settings)
         return PostgresUserRepository(session=partial(get_async_session, session_maker))
 
 
@@ -44,14 +44,14 @@ class RepositoryFactoryStorage:
     async def register_factory(self, factory: RepositoryFactory):
         if await factory.type() not in self.storage_:
             self.storage_[await factory.type()] = factory
-
-        raise Exception("Factory already registered")
+        else:
+            raise Exception("Factory already registered")
 
     async def unregister_factory(self, factory: RepositoryFactory):
         if await factory.type() not in self.storage_:
             del self.storage_[await factory.type()]
-
-        raise Exception("Factory not registered")
+        else:
+            raise Exception("Factory not registered")
 
     async def get_instance(self, type: str, settings: dict) -> BaseUserRepository:
         if type in self.storage_:

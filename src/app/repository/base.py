@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Optional
-from application.models.user import User
+from models.user import User
 
 
 class BaseUserRepository(ABC):
