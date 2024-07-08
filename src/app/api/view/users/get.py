@@ -1,3 +1,4 @@
+from repository.base import BaseUserRepository
 from utils.core.ioc import ioc
 
 
@@ -7,5 +8,5 @@ class GetUserByIdView:
         self,
         user_id: int,
     ):
-        repository = ioc.repository
+        repository = ioc.get(BaseUserRepository)
         return await repository.get(user_id)

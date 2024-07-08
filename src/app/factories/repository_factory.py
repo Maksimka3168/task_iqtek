@@ -19,7 +19,7 @@ class RepositoryFactory:
         raise NotImplementedError
 
 
-class RepositoryMemoryFactory(RepositoryFactory):
+class MemoryRepositoryFactory(RepositoryFactory):
 
     async def type(self) -> str:
         return "memory"
@@ -28,7 +28,7 @@ class RepositoryMemoryFactory(RepositoryFactory):
         return MemoryUserRepository()
 
 
-class RepositoryPostgresFactory(RepositoryFactory):
+class PostgresRepositoryFactory(RepositoryFactory):
     async def type(self):
         return "postgres"
 
@@ -37,7 +37,7 @@ class RepositoryPostgresFactory(RepositoryFactory):
         return PostgresUserRepository(session=partial(get_async_session, session_maker))
 
 
-class RepositoryFactoryStorage:
+class StorageRepositoryFactory:
     def __init__(self):
         self.storage_: Dict[str, RepositoryFactory] = {}
 
