@@ -4,25 +4,38 @@ from api.view.users.delete import DeleteUserByIdView
 from api.view.users.get import GetUserByIdView
 from api.view.users.patch import PatchEditUserByIdView
 from api.view.users.post import PostAddUserView
+from repository.base import BaseUserRepository
+from utils.core.ioc import ioc
 
 users_router = APIRouter(tags=["users"])
-users_router.add_api_route(
-    "/{user_id}",
-    GetUserByIdView().get_user_by_id,
-    methods=["GET"]
-)
-users_router.add_api_route(
-    "/",
-    PostAddUserView().add_user,
-    methods=["POST"]
-)
-users_router.add_api_route(
-    "/",
-    PatchEditUserByIdView().edit_user_by_id,
-    methods=["PATCH"]
-)
-users_router.add_api_route(
-    "/{user_id}",
-    DeleteUserByIdView().delete_user_by_id,
-    methods=["DELETE"]
-)
+
+
+def init_users_endpoints():
+    users_router.add_api_route(
+        "/{user_id}",
+        GetUserByIdView(
+            repository_=ioc.get(BaseUserRepository)
+        ).get_user_by_id,
+        methods=["GET"]
+    )
+    users_router.add_api_route(
+        "/",
+        PostAddUserView(
+            repository_=ioc.get(BaseUserRepository)
+        ).add_user,
+        methods=["POST"]
+    )
+    users_router.add_api_route(
+        "/",
+        PatchEditUserByIdView(
+            repository_=ioc.get(BaseUserRepository)
+        ).edit_user_by_id,
+        methods=["PATCH"]
+    )
+    users_router.add_api_route(
+        "/{user_id}",
+        DeleteUserByIdView(
+            repository_=ioc.get(BaseUserRepository)
+        ).delete_user_by_id,
+        methods=["DELETE"]
+    )

@@ -6,12 +6,14 @@ from utils.core.ioc import ioc
 
 class PostAddUserView:
 
+    def __init__(self, repository_: BaseUserRepository):
+        self.repository = repository_
+
     async def add_user(
-        self,
-        user_create: UserCreate,
+            self,
+            user_create: UserCreate,
     ):
-        repository = ioc.get(BaseUserRepository)
-        user_info = await repository.add(User(
+        user_info = await self.repository.add(User(
             full_name=user_create.full_name
         ))
         return user_info

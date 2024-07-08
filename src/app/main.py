@@ -2,7 +2,7 @@ import uvicorn
 
 from fastapi import FastAPI
 
-from api.users.users import users_router
+from api.users.users import users_router, init_users_endpoints
 from factories.config_factory import ConfigFactoryStorage, YmlConfigFactory
 
 from factories.repository_factory import StorageRepositoryFactory, MemoryRepositoryFactory, PostgresRepositoryFactory
@@ -23,13 +23,13 @@ async def startup():
     config = config_factory_storage.get_instance("yml")
 
     repository_factory_storage = StorageRepositoryFactory()
-    await repository_factory_storage.register_factory(MemoryRepositoryFactory())
-    await repository_factory_storage.register_factory(PostgresRepositoryFactory())
-    repository = await repository_factory_storage.get_instance(config["repositories"]["selected_repository"],
-                                                               settings=config["repositories"][config["repositories"]
-                                                               ["selected_repository"]])
+    repository_factory_storage.register_factory(MemoryRepositoryFactory())
+    repository_factory_storage.register_factory(PostgresRepositoryFactory())
+    repository = repository_factory_storage.get_instance(config["repositories"]["selected_repository"],
+                                                         settings=config["repositories"][config["repositories"]
+                                                         ["selected_repository"]])
     ioc.set(BaseUserRepository, repository)
-
+    init_users_endpoints()
 
 app.include_router(users_router)
 

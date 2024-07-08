@@ -11,29 +11,29 @@ from repository.memory import MemoryUserRepository
 class RepositoryFactory:
 
     @abstractmethod
-    async def type(self) -> str:
+    def type(self) -> str:
         raise NotImplementedError
 
     @abstractmethod
-    async def get_instance(self, settings: dict) -> BaseUserRepository:
+    def get_instance(self, settings: dict) -> BaseUserRepository:
         raise NotImplementedError
 
 
 class MemoryRepositoryFactory(RepositoryFactory):
 
-    async def type(self) -> str:
+    def type(self) -> str:
         return "memory"
 
-    async def get_instance(self, settings: dict) -> BaseUserRepository:
+    def get_instance(self, settings: dict) -> BaseUserRepository:
         return MemoryUserRepository()
 
 
 class PostgresRepositoryFactory(RepositoryFactory):
-    async def type(self):
+    def type(self):
         return "postgres"
 
-    async def get_instance(self, settings: dict) -> BaseUserRepository:
-        session_maker = await create_session_maker(settings)
+    def get_instance(self, settings: dict) -> BaseUserRepository:
+        session_maker = create_session_maker(settings)
         return PostgresUserRepository(session=partial(get_async_session, session_maker))
 
 
@@ -41,21 +41,21 @@ class StorageRepositoryFactory:
     def __init__(self):
         self.storage_: Dict[str, RepositoryFactory] = {}
 
-    async def register_factory(self, factory: RepositoryFactory):
-        if await factory.type() not in self.storage_:
-            self.storage_[await factory.type()] = factory
+    def register_factory(self, factory: RepositoryFactory):
+        if factory.type() not in self.storage_:
+            self.storage_[factory.type()] = factory
         else:
             raise Exception("Factory already registered")
 
     async def unregister_factory(self, factory: RepositoryFactory):
-        if await factory.type() not in self.storage_:
-            del self.storage_[await factory.type()]
+        if factory.type() not in self.storage_:
+            del self.storage_[factory.type()]
         else:
             raise Exception("Factory not registered")
 
     async def get_instance(self, type: str, settings: dict) -> BaseUserRepository:
         if type in self.storage_:
-            return await self.storage_[type].get_instance(settings=settings)
+            return self.storage_[type].get_instance(settings=settings)
 
         raise Exception("Factory not registered")
 
