@@ -20,18 +20,17 @@ app = FastAPI()
 async def startup():
     config_factory_storage = ConfigFactoryStorage()
     config_factory_storage.register_factory(YmlConfigFactory())
-    config = config_factory_storage.get_instance("yml")
+    config = config_factory_storage.get_instance("config.yml")
 
     repository_factory_storage = StorageRepositoryFactory()
     repository_factory_storage.register_factory(MemoryRepositoryFactory())
     repository_factory_storage.register_factory(PostgresRepositoryFactory())
-    repository = repository_factory_storage.get_instance(config["repositories"]["selected_repository"],
-                                                         settings=config["repositories"][config["repositories"]
-                                                         ["selected_repository"]])
+    repository = repository_factory_storage.get_instance(config.repositories.selected_repository,
+                                                         settings=config.repositories.memory)
     ioc.set(BaseUserRepository, repository)
-    init_users_endpoints()
 
-app.include_router(users_router)
+    init_users_endpoints()
+    app.include_router(users_router)
 
 
 def main():

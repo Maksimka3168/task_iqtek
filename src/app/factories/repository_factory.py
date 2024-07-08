@@ -45,17 +45,17 @@ class StorageRepositoryFactory:
         if factory.type() not in self.storage_:
             self.storage_[factory.type()] = factory
         else:
-            raise Exception("Factory already registered")
+            raise Exception(f"Factory repository {factory} already registered")
 
-    async def unregister_factory(self, factory: RepositoryFactory):
+    def unregister_factory(self, factory: RepositoryFactory):
         if factory.type() not in self.storage_:
             del self.storage_[factory.type()]
         else:
-            raise Exception("Factory not registered")
+            raise Exception(f"Factory repository {factory} not registered")
 
-    async def get_instance(self, type: str, settings: dict) -> BaseUserRepository:
+    def get_instance(self, type: str, settings: dict) -> BaseUserRepository:
         if type in self.storage_:
             return self.storage_[type].get_instance(settings=settings)
 
-        raise Exception("Factory not registered")
+        raise Exception(f"Factory repository with type {type} not registered")
 

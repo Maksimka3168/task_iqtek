@@ -1,8 +1,11 @@
+import os
 from abc import abstractmethod, ABC
 from typing import Dict
 
 import yaml
 from yaml import load
+
+from models.config import AppConfig, RepositoryConfig, RepositoryPostgresConfig
 
 
 class ConfigFactory:
@@ -12,7 +15,7 @@ class ConfigFactory:
         raise NotImplementedError
 
     @abstractmethod
-    def get_instance(self) -> dict:
+    def get_instance(self, filepath: str) -> AppConfig:
         raise NotImplementedError
 
 
@@ -20,10 +23,18 @@ class YmlConfigFactory(ConfigFactory, ABC):
     def type(self) -> str:
         return "yml"
 
-    def get_instance(self) -> dict:
-        with open('config.yml', 'r') as f:
+    def get_instance(self, filepath: str) -> AppConfig:
+        with open(filepath, 'r') as f:
             data = load(f, Loader=yaml.SafeLoader)
-            return data
+            return AppConfig(
+                repositories=RepositoryConfig(
+                    selected_repository=data["repositories"]["selected_repository"],
+                    postgres=RepositoryPostgresConfig(
+                        **data["repositories"]["postgres"]
+                    ),
+                    memory=data["repositories"]["memory"]
+                )
+            )
 
 
 class ConfigFactoryStorage:
@@ -34,16 +45,17 @@ class ConfigFactoryStorage:
         if factory.type() not in self.storage_:
             self.storage_[factory.type()] = factory
         else:
-            raise Exception("Factory already registered")
+            raise Exception(f"Factory config {factory} already registered")
 
     def unregister_factory(self, factory: ConfigFactory):
         if factory.type() not in self.storage_:
             del self.storage_[factory.type()]
         else:
-            raise Exception("Factory not registered")
+            raise Exception(f"Factory config {factory} not registered")
 
-    def get_instance(self, type: str) -> dict:
-        if type in self.storage_:
-            return self.storage_[type].get_instance()
+    def get_instance(self, filepath: str) -> AppConfig:
+        file_extension = os.path.splitext(filepath)[-1].lower().lstrip('.')
+        if file_extension in self.storage_:
+            return self.storage_[file_extension].get_instance(filepath=filepath)
 
-        raise Exception("Factory not registered")
+        raise Exception(f"Factory config for format .{file_extension} not registered")

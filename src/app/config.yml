@@ -6,4 +6,4 @@ repositories:
     password: 'password'
     hostname: 'host'
     database_name: 'db_name'
-  memory:
+  memory: {}
