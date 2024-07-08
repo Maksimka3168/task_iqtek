@@ -1,4 +1,4 @@
-from ioc import ioc
+from utils.core.ioc import ioc
 
 
 class DeleteUserByIdView:

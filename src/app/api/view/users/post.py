@@ -1,6 +1,6 @@
 from api.users.schemas import UserCreate
 from models.user import User
-from ioc import ioc
+from utils.core.ioc import ioc
 
 
 class PostAddUserView:

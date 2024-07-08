@@ -6,7 +6,7 @@ from api.users.users import users_router
 from factories.config_factory import ConfigFactoryStorage, YmlConfigFactory
 
 from factories.repository_factory import RepositoryFactoryStorage, RepositoryMemoryFactory, RepositoryPostgresFactory
-from ioc import ioc
+from utils.core.ioc import ioc
 
 from dotenv import load_dotenv
 

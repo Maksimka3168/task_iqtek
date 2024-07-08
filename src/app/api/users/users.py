@@ -1,9 +1,9 @@
 from fastapi import APIRouter
 
-from view.users.delete import DeleteUserByIdView
-from view.users.get import GetUserByIdView
-from view.users.patch import PatchEditUserByIdView
-from view.users.post import PostAddUserView
+from api.view.users.delete import DeleteUserByIdView
+from api.view.users.get import GetUserByIdView
+from api.view.users.patch import PatchEditUserByIdView
+from api.view.users.post import PostAddUserView
 
 users_router = APIRouter(tags=["users"])
 users_router.add_api_route(

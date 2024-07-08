@@ -1,5 +1,5 @@
 from api.users.schemas import UserPatch
-from ioc import ioc
+from utils.core.ioc import ioc
 from models.user import User
 
 
