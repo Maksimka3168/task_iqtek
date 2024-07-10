@@ -1,9 +1,9 @@
 from fastapi import APIRouter
 
-from api.view.users.delete import DeleteUserByIdView
-from api.view.users.get import GetUserByIdView
-from api.view.users.patch import PatchEditUserByIdView
-from api.view.users.post import PostAddUserView
+from api.users.delete import DeleteUserByIdView
+from api.users.get import GetUserByIdView
+from api.users.patch import PatchEditUserByIdView
+from api.users.post import PostAddUserView
 from repository.base import BaseUserRepository
 from utils.core.ioc import ioc
 
