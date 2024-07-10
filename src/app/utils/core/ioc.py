@@ -17,7 +17,7 @@ class IoC:
         if key not in self._values:
             raise AttributeError(f"Key {key} is not registered.")
         attribute = self._values[key]
-        return attribute(self) if callable(attribute) else attribute
+        return attribute() if callable(attribute) else attribute
 
 
 ioc = IoC()
