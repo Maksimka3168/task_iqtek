@@ -14,28 +14,28 @@ def init_users_endpoints():
     users_router.add_api_route(
         "/{user_id}",
         GetUserByIdView(
-            repository_=ioc.get(BaseUserRepository)
+            repository=ioc.get(BaseUserRepository)
         ).get_user_by_id,
         methods=["GET"]
     )
     users_router.add_api_route(
         "/",
         PostAddUserView(
-            repository_=ioc.get(BaseUserRepository)
+            repository=ioc.get(BaseUserRepository)
         ).add_user,
         methods=["POST"]
     )
     users_router.add_api_route(
         "/",
         PatchEditUserByIdView(
-            repository_=ioc.get(BaseUserRepository)
+            repository=ioc.get(BaseUserRepository)
         ).edit_user_by_id,
         methods=["PATCH"]
     )
     users_router.add_api_route(
         "/{user_id}",
         DeleteUserByIdView(
-            repository_=ioc.get(BaseUserRepository)
+            repository=ioc.get(BaseUserRepository)
         ).delete_user_by_id,
         methods=["DELETE"]
     )

@@ -5,8 +5,8 @@ from models.user import User
 
 class PatchEditUserByIdView:
 
-    def __init__(self, repository_: BaseUserRepository):
-        self.repository = repository_
+    def __init__(self, repository: BaseUserRepository):
+        self.__repository = repository
 
     async def edit_user_by_id(
         self,
@@ -14,4 +14,4 @@ class PatchEditUserByIdView:
     ):
         user = User(full_name=user_patch.full_name)
         user.id = user_patch.user_id
-        return await self.repository.update(user)
+        return await self.__repository.update(user)
