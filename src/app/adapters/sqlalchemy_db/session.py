@@ -1,13 +1,10 @@
-import os
-
-from typing import AsyncGenerator
+from typing import AsyncGenerator, Mapping, Any
 
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
 
-def create_session_maker(settings: dict):
-
+def create_session_maker(settings: Mapping[str, Any]):
     DATABASE_URL = f"{settings['driver']}://{settings['username']}:{settings['password']}@{settings['hostname']}/{settings['database_name']}"
 
     engine = create_async_engine(DATABASE_URL)

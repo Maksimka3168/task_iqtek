@@ -3,10 +3,10 @@ from typing import Optional
 
 from sqlalchemy import select, insert, update, delete
 
-from models.user import User, UserResponse
-from repository.base import BaseUserRepository
+from app.models.user import User, UserResponse
+from app.repository.base import BaseUserRepository
 
-from adapters.sqlalchemy_db.models import Users
+from app.adapters.sqlalchemy_db.models import Users
 
 
 class PostgresUserRepository(BaseUserRepository, ABC):
@@ -64,3 +64,19 @@ class PostgresUserRepository(BaseUserRepository, ABC):
         await self.session.execute(query)
         await self.session.commit()
         return True
+
+    async def get_by_name(self, full_name: str) -> Optional[User]:
+        query = (
+            select(Users)
+            .where(
+                Users.full_name == full_name
+            )
+        )
+        result = await self.session.execute(query)
+        user_info = result.scalar()
+        if not user_info:
+            return
+        return UserResponse(
+            id=user_info.id,
+            full_name=user_info.full_name
+        )

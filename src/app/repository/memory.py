@@ -1,8 +1,8 @@
 from abc import ABC
 from typing import Optional
 
-from models.user import User
-from repository.base import BaseUserRepository
+from app.models.user import User
+from app.repository.base import BaseUserRepository
 
 
 class MemoryUserRepository(BaseUserRepository, ABC):
@@ -24,3 +24,6 @@ class MemoryUserRepository(BaseUserRepository, ABC):
     async def remove(self, user_id: int) -> bool:
         self.data = list(filter(lambda e: e.id != user_id, self.data))
         return True
+
+    async def get_by_name(self, full_name: str) -> Optional[User]:
+        return next((e for e in self.data if e.full_name == full_name), None)

@@ -2,10 +2,9 @@ import os
 from abc import abstractmethod, ABC
 from typing import Dict
 
-import yaml
-from yaml import load
+from yaml import load, SafeLoader
 
-from models.config import AppConfig, RepositoryConfig, RepositoryPostgresConfig
+from app.models.config import AppConfig
 
 
 class ConfigFactory:
@@ -25,15 +24,10 @@ class YmlConfigFactory(ConfigFactory, ABC):
 
     def get_instance(self, filepath: str) -> AppConfig:
         with open(filepath, 'r') as f:
-            data = load(f, Loader=yaml.SafeLoader)
+            data = load(f, Loader=SafeLoader)
             return AppConfig(
-                repositories=RepositoryConfig(
-                    selected_repository=data["repositories"]["selected_repository"],
-                    postgres=RepositoryPostgresConfig(
-                        **data["repositories"]["postgres"]
-                    ),
-                    memory=data["repositories"]["memory"]
-                )
+                type=data["type"],
+                settings=data["settings"]
             )
 
 
