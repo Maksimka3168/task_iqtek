@@ -6,7 +6,7 @@ from app.models.user import User
 from app.services.users import UserService
 
 
-class AddUserView:
+class AddUserCommand:
 
     def __init__(self, service: UserService):
         self.__service = service

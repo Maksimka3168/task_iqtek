@@ -5,7 +5,7 @@ import click
 from app.services.users import UserService
 
 
-class GetUserByIdView:
+class GetUserByIdCommand:
 
     def __init__(self, service: UserService):
         self.__service = service

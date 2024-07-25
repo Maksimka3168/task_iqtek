@@ -1,9 +1,9 @@
 import click
 
-from app.api.console.users.add import AddUserView
-from app.api.console.users.delete import DeleteUserByIdView
-from app.api.console.users.get import GetUserByIdView
-from app.api.console.users.patch import PatchEditUserByIdView
+from app.api.console.users.add import AddUserCommand
+from app.api.console.users.delete import DeleteUserByIdCommand
+from app.api.console.users.get import GetUserByIdCommand
+from app.api.console.users.patch import PatchEditUserByIdCommand
 from app.repository.base import BaseUserRepository
 from app.services.users import UserService
 from app.utils.ioc import ioc
@@ -12,7 +12,7 @@ from app.utils.ioc import ioc
 def register_command():
     add_user_command = click.Command(
         name='add_user',
-        callback=AddUserView(
+        callback=AddUserCommand(
             service=UserService(
                 repository=ioc.get(BaseUserRepository)
             )
@@ -23,7 +23,7 @@ def register_command():
     )
     remove_user_command = click.Command(
         name='remove_user',
-        callback=DeleteUserByIdView(
+        callback=DeleteUserByIdCommand(
             service=UserService(
                 repository=ioc.get(BaseUserRepository)
             )
@@ -34,7 +34,7 @@ def register_command():
     )
     get_user_command = click.Command(
         name='get_user',
-        callback=GetUserByIdView(
+        callback=GetUserByIdCommand(
             service=UserService(
                 repository=ioc.get(BaseUserRepository)
             )
@@ -45,7 +45,7 @@ def register_command():
     )
     edit_user_command = click.Command(
         name='edit_user',
-        callback=PatchEditUserByIdView(
+        callback=PatchEditUserByIdCommand(
             service=UserService(
                 repository=ioc.get(BaseUserRepository)
             )

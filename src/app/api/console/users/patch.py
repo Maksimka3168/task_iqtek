@@ -6,7 +6,7 @@ from app.models.user import User
 from app.services.users import UserService
 
 
-class PatchEditUserByIdView:
+class PatchEditUserByIdCommand:
 
     def __init__(self, service: UserService):
         self.__service = service

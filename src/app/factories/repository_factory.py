@@ -3,6 +3,7 @@ from functools import partial
 from typing import Dict, Mapping, Any
 
 from app.adapters.sqlalchemy_db.session import create_session_maker, get_async_session
+from app.models.settings import PostgresSetting
 from app.repository.base import BaseUserRepository
 from app.repository.database import PostgresUserRepository
 from app.repository.memory import MemoryUserRepository
@@ -33,7 +34,26 @@ class PostgresRepositoryFactory(RepositoryFactory):
         return "postgres"
 
     def get_instance(self, settings: Mapping[str, Any]) -> BaseUserRepository:
-        session_maker = create_session_maker(settings)
+        required_keys = {
+            'driver': str,
+            'username': str,
+            'password': str,
+            'hostname': str,
+            'database_name': str
+        }
+        for key, expected_type in required_keys.items():
+            if key not in settings:
+                raise ValueError(f'Missing required setting for postgres: {key}')
+            if not isinstance(settings[key], expected_type):
+                raise TypeError(
+                    f'Invalid type for {key}: expected {expected_type.__name__}, got {type(settings[key]).__name__}')
+        session_maker = create_session_maker(PostgresSetting(
+            driver=settings.get("driver"),
+            username=settings.get("driver"),
+            password=settings.get("password"),
+            hostname=settings.get("hostname"),
+            database_name=settings.get("database_name")
+        ))
         return PostgresUserRepository(session=partial(get_async_session, session_maker))
 
 

@@ -5,7 +5,7 @@ import click
 from app.services.users import UserService
 
 
-class DeleteUserByIdView:
+class DeleteUserByIdCommand:
 
     def __init__(self, service: UserService):
         self.__service = service
