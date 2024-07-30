@@ -9,6 +9,7 @@ from app.models.config import AppConfig
 
 class ConfigFactory:
 
+
     @abstractmethod
     def type(self) -> str:
         raise NotImplementedError

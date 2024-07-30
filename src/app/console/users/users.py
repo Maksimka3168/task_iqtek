@@ -1,9 +1,9 @@
 import click
 
-from app.api.console.users.add import AddUserCommand
-from app.api.console.users.delete import DeleteUserByIdCommand
-from app.api.console.users.get import GetUserByIdCommand
-from app.api.console.users.patch import PatchEditUserByIdCommand
+from app.console.users.add import AddUserCommand
+from app.console.users.delete import DeleteUserByIdCommand
+from app.console.users.get import GetUserByIdCommand
+from app.console.users.patch import PatchEditUserByIdCommand
 from app.repository.base import BaseUserRepository
 from app.services.users import UserService
 from app.utils.ioc import ioc

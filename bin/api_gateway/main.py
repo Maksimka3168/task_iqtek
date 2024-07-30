@@ -1,11 +1,10 @@
-import app.bootstrap.initialization_app
 import uvicorn
 
 from fastapi import FastAPI
+from dotenv import load_dotenv
 
 from app.api.gateway.users.users import users_router, init_users_endpoints
-
-from dotenv import load_dotenv
+from app.bootstrap.initialization_app import initialize_app
 
 load_dotenv()
 
@@ -14,6 +13,7 @@ app = FastAPI()
 
 @app.on_event("startup")
 async def startup():
+    initialize_app(config_path="../../config.yml")
     init_users_endpoints()
     app.include_router(users_router)
 
